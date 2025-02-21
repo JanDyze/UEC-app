@@ -1,0 +1,30 @@
+[
+  {
+    "id": 1,
+    "firstname": "John",
+    "lastname": "Doe",
+    "address": "123 Church St, Cityville",
+    "birthday": "1985-06-15",
+    "is_member": true,
+    "gender": "Male",
+    "nickname": "Johnny",
+    "phone": "123-456-7890",
+    "facebook": "john.doe",
+    "created_at": "2025-02-20T10:00:00Z",
+    "updated_at": "2025-02-20T10:00:00Z"
+  },
+  {
+    "id": 2,
+    "firstname": "Jane",
+    "lastname": "Smith",
+    "address": "456 Faith Rd, Townsville",
+    "birthday": "1990-09-25",
+    "is_member": true,
+    "gender": "Female",
+    "nickname": "Janie",
+    "phone": "987-654-3210",
+    "facebook": "jane.smith",
+    "created_at": "2025-02-20T10:05:00Z",
+    "updated_at": "2025-02-20T10:05:00Z"
+  }
+]
