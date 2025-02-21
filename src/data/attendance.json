@@ -1,0 +1,14 @@
+[
+  {
+    "id": 1,
+    "service_id": 1,
+    "person_id": 1,
+    "status": "Present"
+  },
+  {
+    "id": 2,
+    "service_id": 1,
+    "person_id": 2,
+    "status": "Absent"
+  }
+]
