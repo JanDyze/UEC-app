@@ -26,5 +26,61 @@
     "facebook": "jane.smith",
     "created_at": "2025-02-20T10:05:00Z",
     "updated_at": "2025-02-20T10:05:00Z"
+  },
+  {
+    "id": 3,
+    "firstname": "Alice",
+    "lastname": "Johnson",
+    "address": "789 Hope Ave, Faith City",
+    "birthday": "1992-03-18",
+    "is_member": false,
+    "gender": "Female",
+    "nickname": "Ali",
+    "phone": "321-654-0987",
+    "facebook": "alice.johnson",
+    "created_at": "2025-02-20T10:10:00Z",
+    "updated_at": "2025-02-20T10:10:00Z"
+  },
+  {
+    "id": 4,
+    "firstname": "Michael",
+    "lastname": "Brown",
+    "address": "101 Grace St, Blessington",
+    "birthday": "1980-07-22",
+    "is_member": true,
+    "gender": "Male",
+    "nickname": "Mike",
+    "phone": "555-123-4567",
+    "facebook": "michael.brown",
+    "created_at": "2025-02-20T10:15:00Z",
+    "updated_at": "2025-02-20T10:15:00Z"
+  },
+  {
+    "id": 5,
+    "firstname": "Emily",
+    "lastname": "Davis",
+    "address": "202 Mercy Ln, Kindness City",
+    "birthday": "1988-12-05",
+    "is_member": true,
+    "gender": "Female",
+    "nickname": "Em",
+    "phone": "555-987-1234",
+    "facebook": "emily.davis",
+    "created_at": "2025-02-20T10:20:00Z",
+    "updated_at": "2025-02-20T10:20:00Z"
+  },
+  {
+    "id": 6,
+    "firstname": "Chris",
+    "lastname": "Wilson",
+    "address": "303 Fellowship Rd, Unity Town",
+    "birthday": "1995-05-30",
+    "is_member": false,
+    "gender": "Male",
+    "nickname": "Chris",
+    "phone": "555-654-7890",
+    "facebook": "chris.wilson",
+    "created_at": "2025-02-20T10:25:00Z",
+    "updated_at": "2025-02-20T10:25:00Z"
   }
 ]

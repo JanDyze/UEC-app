@@ -53,7 +53,8 @@ const theme = extendTheme({
         background: {
           surface: "#f4f4f4", // General background
           level1: "#ffffff", // Default surface color
-          level2: "#e1dcd1", // Slightly darker background for cards/sections
+          level2: "#e1dcd1",
+          cosmicLatte: "#fff8e7", // Slightly darker background for cards/sections
         },
         text: {
           primary: "#010100", // Black
@@ -164,8 +165,8 @@ const theme = extendTheme({
     JoyCard: {
       styleOverrides: {
         root: {
-          borderRadius: "12px", // More rounded edges
-          boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+          borderRadius: "40px", // More rounded edges
+          boxShadow: "none",
         },
       },
     },

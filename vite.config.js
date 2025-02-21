@@ -9,4 +9,8 @@ export default defineConfig({
       "@": path.resolve(__dirname, "src"), // Make "@" point to "src"
     },
   },
+  server: {
+    host: "0.0.0.0", // Allows access from network
+    allowedHosts: ["dyze-app.com"], // Add your custom hostname here
+  },
 });
