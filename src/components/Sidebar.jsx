@@ -1,41 +1,32 @@
-import React from "react";
 import { useState } from "react";
-import { Divider, Box, Drawer, List, ListItem, ListItemButton, Typography } from "@mui/joy";
+import { Box, IconButton, List, ListItem, ListDivider } from "@mui/joy";
+import MenuIcon from "@mui/icons-material/Menu";
+import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 
-export function Sidebar() {
-    const [open, setOpen] = useState(false);
-    const toggleDrawer = (inOpen) => (event) => {
-        if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
-            return;
-        }
-        setOpen(inOpen);
-    };
+export default function Sidebar() {
+    const [sidebarOpen, setSidebarOpen] = useState(true);
+    const sidebarWidth = sidebarOpen ? 250 : 60;
 
     return (
-        <Drawer open={open} onClose={toggleDrawer(false)}>
-            <Box
-                role="presentation"
-                onClick={toggleDrawer(false)}
-                onKeyDown={toggleDrawer(false)}
+        <Box
+            sx={{
+                width: sidebarWidth,
+                transition: "width 0.3s ease-in-out",
+                p: 2,
+                bgcolor: "background.level1",
+            }}
+        >
+            <IconButton
+                onClick={() => setSidebarOpen(!sidebarOpen)}
+                sx={{
+                    mb: 2,
+                    bgcolor: "neutral.main",
+                    "&:hover": { bgcolor: "neutral.hover" },
+                }}
             >
-                <List>
-                    {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text) => (
-                        <ListItem key={text}>
-                            <ListItemButton>{text}</ListItemButton>
-                        </ListItem>
-                    ))}
-                </List>
-                <Divider />
-                <List>
-                    {['All mail', 'Trash', 'Spam'].map((text) => (
-                        <ListItem key={text}>
-                            <ListItemButton>{text}</ListItemButton>
-                        </ListItem>
-                    ))}
-                </List>
-            </Box>
-        </Drawer>
+                {sidebarOpen ? <ChevronLeftIcon /> : <MenuIcon />}
+            </IconButton>
+
+        </Box>
     );
 }
-
-// export default Sidebar;
