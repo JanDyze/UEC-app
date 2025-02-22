@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { io } from "socket.io-client";
 
-const socket = io("http://localhost:5000");
+const socket = io("https://uec-api-33mk.vercel.app");
 
 const App = () => {
   const [persons, setPersons] = useState([]);
@@ -11,7 +11,7 @@ const App = () => {
 
   // Fetch persons from backend
   const fetchPersons = async () => {
-    const res = await axios.get("http://localhost:5000/persons");
+    const res = await axios.get("https://uec-api-33mk.vercel.app/persons");
     setPersons(res.data);
   };
 
@@ -26,7 +26,7 @@ const App = () => {
     e.preventDefault();
     if (!firstname || !lastname) return;
 
-    await axios.post("http://localhost:5000/persons", { firstname, lastname });
+    await axios.post("https://uec-api-33mk.vercel.app/persons", { firstname, lastname });
 
     setFirstname("");
     setLastname("");
