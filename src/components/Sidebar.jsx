@@ -10,10 +10,12 @@ import Diversity3Icon from "@mui/icons-material/Diversity3";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 import Typography from '@mui/material/Typography'
 import { useSidebar } from "@/context/SidebarContext"; // Import context
+import ChecklistIcon from "@mui/icons-material/Checklist"
 
 const menuItems = [
     { icon: <ChurchIcon />, label: "Church", path: "/" },
-    { icon: <CalendarMonthIcon />, label: "Attendance", path: "/attendance" },
+    { icon: <ChecklistIcon />, label: "Attendance", path: "/attendance" },
+    { icon: <CalendarMonthIcon />, label: "Services and Events", path: "/services" },
     { icon: <Diversity3Icon />, label: "Members", path: "/persons" },
     { icon: <SettingsIcon />, label: "Settings", path: "/" },
 ];

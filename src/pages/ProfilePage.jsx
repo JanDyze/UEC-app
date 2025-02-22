@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Sheet, Typography, Stack, Avatar, CircularProgress } from "@mui/joy";
 import { useParams } from "react-router-dom";
+import { fetchPersonById } from "@/api/personsApi"; // Import the API function
 
 const ProfilePage = () => {
     const { id } = useParams();
@@ -8,13 +9,10 @@ const ProfilePage = () => {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const fetchPerson = async () => {
+        const getPerson = async () => {
+            setLoading(true);
             try {
-                const res = await fetch(`http://localhost:5000/api/persons/${id}`);
-                if (!res.ok) {
-                    throw new Error("Person not found");
-                }
-                const data = await res.json();
+                const data = await fetchPersonById(id);
                 setPerson(data);
             } catch (error) {
                 console.error("Error fetching person:", error);
@@ -24,7 +22,7 @@ const ProfilePage = () => {
             }
         };
 
-        fetchPerson();
+        getPerson();
     }, [id]);
 
     if (loading) {

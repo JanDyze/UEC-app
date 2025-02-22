@@ -1,66 +1,46 @@
 import React, { useEffect, useState } from "react";
-import { Table, Typography, Button, IconButton } from "@mui/joy";
+import { Table, Typography, Button, IconButton, Modal, ModalDialog, Stack, Input, Select, Option } from "@mui/joy";
 import { Link } from "react-router-dom";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import VisibilityIcon from "@mui/icons-material/Visibility"; // View icon
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import AddIcon from "@mui/icons-material/Add";
+import { fetchServices, addService, deleteService } from "../api/servicesApi";
 
 const ServicesList = () => {
     const [services, setServices] = useState([]);
-    const [presentCounts, setPresentCounts] = useState({}); // Stores present count for each service
+    const [openModal, setOpenModal] = useState(false);
+    const [newService, setNewService] = useState({ date: "", type_of_event: "" });
 
     useEffect(() => {
-        fetchServices();
+        loadServices();
     }, []);
 
-    const fetchServices = async () => {
-        try {
-            const res = await fetch("http://localhost:5000/api/services");
-            const data = await res.json();
-            setServices(data);
-            fetchPresentCounts(data); // Fetch present counts after fetching services
-        } catch (error) {
-            console.error("Error fetching services:", error);
-        }
-    };
-
-    const fetchPresentCounts = async (services) => {
-        const counts = {};
-        await Promise.all(
-            services.map(async (service) => {
-                try {
-                    const res = await fetch(`http://localhost:5000/api/attendance/${service.id}/count/present`);
-                    const data = await res.json();
-                    counts[service.id] = data.presentCount; // Store count by service ID
-                } catch (error) {
-                    console.error(`Error fetching present count for service ${service.id}:`, error);
-                    counts[service.id] = 0; // Default to 0 if there's an error
-                }
-            })
-        );
-        setPresentCounts(counts);
+    const loadServices = async () => {
+        const serviceData = await fetchServices();
+        setServices(serviceData);
     };
 
     const handleDelete = async (id) => {
         if (!window.confirm("Are you sure you want to delete this service?")) return;
 
-        try {
-            const res = await fetch(`http://localhost:5000/api/services/${id}`, {
-                method: "DELETE",
-            });
+        const success = await deleteService(id);
+        if (success) {
+            setServices(services.filter((service) => service._id !== id));
+        }
+    };
 
-            if (res.ok) {
-                setServices(services.filter((service) => service.id !== id));
-                setPresentCounts((prev) => {
-                    const newCounts = { ...prev };
-                    delete newCounts[id]; // Remove count entry for deleted service
-                    return newCounts;
-                });
-            } else {
-                console.error("Failed to delete service");
-            }
-        } catch (error) {
-            console.error("Error deleting service:", error);
+    const handleAddService = async () => {
+        if (!newService.date || !newService.type_of_event) {
+            alert("Please fill in all fields.");
+            return;
+        }
+
+        const addedService = await addService(newService);
+        if (addedService) {
+            setServices([...services, addedService]);
+            setNewService({ date: "", type_of_event: "" });
+            setOpenModal(false);
         }
     };
 
@@ -70,7 +50,7 @@ const ServicesList = () => {
                 Services List
             </Typography>
 
-            <Button component={Link} to="/new-service" sx={{ mb: 2 }}>
+            <Button startDecorator={<AddIcon />} onClick={() => setOpenModal(true)} sx={{ mb: 2 }}>
                 Add New Service
             </Button>
 
@@ -79,25 +59,25 @@ const ServicesList = () => {
                     <tr>
                         <th>ID</th>
                         <th>Date</th>
-                        <th>Present Count</th>
+                        <th>Type of Event</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
                     {services.length > 0 ? (
                         services.map((service) => (
-                            <tr key={service.id}>
-                                <td>{service.id}</td>
+                            <tr key={service._id}>
+                                <td>{service._id}</td>
                                 <td>{new Date(service.date).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })}</td>
-                                <td>{presentCounts[service.id] ?? "Loading..."}</td>
+                                <td>{service.type_of_event}</td>
                                 <td>
-                                    <IconButton component={Link} to={`/attendance/${service.id}`} size="sm" color="primary">
+                                    <IconButton component={Link} to={`/attendance/${service._id}`} size="sm" color="primary">
                                         <VisibilityIcon />
                                     </IconButton>
-                                    <IconButton component={Link} to={`/edit-service/${service.id}`} size="sm">
+                                    <IconButton component={Link} to={`/edit-service/${service._id}`} size="sm">
                                         <EditIcon />
                                     </IconButton>
-                                    <IconButton onClick={() => handleDelete(service.id)} size="sm" color="danger">
+                                    <IconButton onClick={() => handleDelete(service._id)} size="sm" color="danger">
                                         <DeleteIcon />
                                     </IconButton>
                                 </td>
@@ -110,6 +90,41 @@ const ServicesList = () => {
                     )}
                 </tbody>
             </Table>
+
+            {/* Modal for adding a new service */}
+            <Modal open={openModal} onClose={() => setOpenModal(false)}>
+                <ModalDialog sx={{ width: "400px", padding: "20px" }}>
+                    <Typography level="h4" sx={{ mb: 2 }}>
+                        Add New Service
+                    </Typography>
+                    <Stack spacing={2}>
+                        <Input
+                            type="date"
+                            value={newService.date}
+                            onChange={(e) => setNewService({ ...newService, date: e.target.value })}
+                            placeholder="Select Date"
+                        />
+                        <Select
+                            value={newService.type_of_event}
+                            onChange={(e, value) => setNewService({ ...newService, type_of_event: value })}
+                            placeholder="Select Event Type"
+                        >
+                            <Option value="Sunday Service">Sunday Service</Option>
+                            <Option value="Bible Study">Bible Study</Option>
+                            <Option value="Prayer Meeting">Prayer Meeting</Option>
+                            <Option value="Special Event">Special Event</Option>
+                        </Select>
+                        <Stack direction="row" spacing={2} justifyContent="flex-end">
+                            <Button onClick={() => setOpenModal(false)} variant="plain">
+                                Cancel
+                            </Button>
+                            <Button onClick={handleAddService} variant="solid">
+                                Add
+                            </Button>
+                        </Stack>
+                    </Stack>
+                </ModalDialog>
+            </Modal>
         </div>
     );
 };

@@ -5,7 +5,7 @@ import { apiClient, handleRequest } from "./apiConfig";
  */
 export const fetchAttendanceRecords = async () => {
   const response = await handleRequest(() => apiClient.get("/attendance"));
-  return response.data || []; // Extracts `data` directly
+  return response.data || [];
 };
 
 /**
@@ -14,6 +14,26 @@ export const fetchAttendanceRecords = async () => {
 export const fetchAttendanceById = async (id) => {
   const response = await handleRequest(() =>
     apiClient.get(`/attendance/${id}`)
+  );
+  return response.data || null;
+};
+
+/**
+ * Fetch attendance records for a specific service.
+ */
+export const fetchAttendanceByServiceId = async (serviceId) => {
+  const response = await handleRequest(() =>
+    apiClient.get(`/attendance/service/${serviceId}`)
+  );
+  return response.data || [];
+};
+
+/**
+ * Initialize attendance for a service by registering all persons as absent.
+ */
+export const setAttendanceByServiceId = async (serviceId) => {
+  const response = await handleRequest(() =>
+    apiClient.post(`/attendance/service/${serviceId}`)
   );
   return response.data || null;
 };
@@ -45,5 +65,15 @@ export const deleteAttendance = async (id) => {
   const response = await handleRequest(() =>
     apiClient.delete(`/attendance/${id}`)
   );
-  return response.success; // Keep this since deletion doesn't return data
+  return response.success;
+};
+
+/**
+ * Fetch attendance records by date.
+ */
+export const fetchAttendanceByDate = async (date) => {
+  const response = await handleRequest(() =>
+    apiClient.get(`/attendance/date/${date}`)
+  );
+  return response.data || [];
 };

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Sheet, Typography, Stack, Input, Button, Select, Option } from "@mui/joy";
 import { useNavigate } from "react-router-dom";
+import { addPerson } from "../api/personsApi"; // Import API function
 
 const NewPerson = () => {
     const navigate = useNavigate();
@@ -15,6 +16,8 @@ const NewPerson = () => {
         facebook: "",
     });
 
+    const [error, setError] = useState(null); // State for error handling
+
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
@@ -23,38 +26,58 @@ const NewPerson = () => {
         e.preventDefault();
 
         try {
-            const response = await fetch("http://localhost:5000/api/persons/add", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(formData),
-            });
-
-            if (response.ok) {
-                navigate("/persons"); // Redirect to home page after successful submission
+            const response = await addPerson(formData); // Use API function
+            if (response) {
+                navigate("/persons"); // Redirect after success
             } else {
-                console.error("Failed to add person");
+                setError("Failed to add person.");
             }
         } catch (error) {
             console.error("Error:", error);
+            setError("An error occurred while adding the person.");
         }
     };
 
     return (
-        <Sheet variant="outlined" sx={{ p: 4, maxWidth: 400, mx: "auto", borderRadius: "md" }}>
-            <Typography level="h3" sx={{ mb: 2 }}>Add New Person</Typography>
-            <Stack spacing={2} component="form" onSubmit={handleSubmit}>
-                <Input name="firstname" placeholder="First Name" value={formData.firstname} onChange={handleChange} required />
-                <Input name="lastname" placeholder="Last Name" value={formData.lastname} onChange={handleChange} required />
-                <Input name="address" placeholder="Address" value={formData.address} onChange={handleChange} required />
-                <Input type="date" name="birthday" value={formData.birthday} onChange={handleChange} required />
-                <Select name="gender" value={formData.gender} onChange={(e, newValue) => setFormData({ ...formData, gender: newValue })} required>
+        <Sheet variant="outlined" sx={{ p: 4, maxWidth: 400, mx: "auto", borderRadius: "md", color: "primary.main" }}>
+            <Typography level="h3" sx={{ mb: 2, color: "primary.main" }}>Add New Person</Typography>
+            {error && <Typography sx={{ color: "danger.main" }}>{error}</Typography>}
+            <Stack spacing={2} component="form" onSubmit={handleSubmit} sx={{ color: "primary.main" }}>
+                {["firstname", "lastname", "address", "nickname", "phone", "facebook"].map((field) => (
+                    <Input
+                        key={field}
+                        name={field}
+                        placeholder={field.replace(/^\w/, (c) => c.toUpperCase())} // Capitalizes first letter
+                        value={formData[field]}
+                        onChange={handleChange}
+                        required={["firstname", "lastname", "address", "phone"].includes(field)}
+                        sx={{
+                            "&::placeholder": { color: "primary.500" }, // Placeholder color
+                            "&:focus-within": { color: "primary.main" }, // Focus color
+                        }}
+                    />
+                ))}
+                <Input
+                    type="date"
+                    name="birthday"
+                    value={formData.birthday}
+                    onChange={handleChange}
+                    required
+                    sx={{
+                        "&:focus-within": { color: "primary.main" },
+                    }}
+                />
+                <Select
+                    name="gender"
+                    value={formData.gender}
+                    onChange={(e, newValue) => setFormData({ ...formData, gender: newValue })}
+                    required
+                    sx={{ color: "primary.main" }}
+                >
                     <Option value="Male">Male</Option>
                     <Option value="Female">Female</Option>
                 </Select>
-                <Input name="nickname" placeholder="Nickname" value={formData.nickname} onChange={handleChange} />
-                <Input name="phone" placeholder="Phone Number" value={formData.phone} onChange={handleChange} required />
-                <Input name="facebook" placeholder="Facebook Profile Link" value={formData.facebook} onChange={handleChange} />
-                <Button type="submit">Submit</Button>
+                <Button type="submit" sx={{ bgcolor: "primary.main", color: "white" }}>Submit</Button>
             </Stack>
         </Sheet>
     );
