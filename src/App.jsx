@@ -1,14 +1,12 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 
-// Always enforce HTTPS, even for local development
-const API_BASE_URL = "https://uec-api-33mk.vercel.app"; // Use HTTPS locally (ensure localhost runs on HTTPS)
+const API_BASE_URL = "https://uec-api-33mk.vercel.app"; // Always use HTTPS API
 
 const App = () => {
   const [persons, setPersons] = useState([]);
   const [firstname, setFirstname] = useState("");
   const [lastname, setLastname] = useState("");
-  const eventSourceRef = useRef(null);
 
   // Fetch persons from backend
   const fetchPersons = async () => {
@@ -22,34 +20,6 @@ const App = () => {
 
   useEffect(() => {
     fetchPersons(); // Initial fetch
-
-    // Setup SSE for real-time updates
-    const setupSSE = () => {
-      if (eventSourceRef.current) {
-        eventSourceRef.current.close(); // Close any existing connection
-      }
-
-      eventSourceRef.current = new EventSource(`${API_BASE_URL}/events`);
-
-      eventSourceRef.current.onmessage = () => {
-        console.log("Update received from server");
-        fetchPersons(); // Refresh list on update
-      };
-
-      eventSourceRef.current.onerror = () => {
-        console.error("SSE connection lost. Retrying in 5s...");
-        eventSourceRef.current.close();
-        setTimeout(setupSSE, 5000); // Retry after 5 seconds
-      };
-    };
-
-    setupSSE();
-
-    return () => {
-      if (eventSourceRef.current) {
-        eventSourceRef.current.close();
-      }
-    };
   }, []);
 
   // Handle form submission
@@ -59,6 +29,7 @@ const App = () => {
 
     try {
       await axios.post(`${API_BASE_URL}/persons`, { firstname, lastname });
+      fetchPersons(); // Manually refresh list
       setFirstname("");
       setLastname("");
     } catch (error) {
