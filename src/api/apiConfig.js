@@ -2,7 +2,7 @@ import axios from "axios";
 
 const API_BASE_URL =
   process.env.NODE_ENV === "production"
-    ? "https://uec-api-33mk.vercel.app"
+    ? "https://uec-api-7flm.vercel.app"
     : "http://localhost:5000";
 
 // Create an Axios instance with default configuration
