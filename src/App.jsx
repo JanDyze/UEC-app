@@ -2,10 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import axios from "axios";
 
 // Always enforce HTTPS, even for local development
-const API_BASE_URL =
-  process.env.NODE_ENV === "production"
-    ? "https://uec-api-33mk.vercel.app"
-    : "https://localhost:5000"; // Use HTTPS locally (ensure localhost runs on HTTPS)
+const API_BASE_URL = "https://uec-api-33mk.vercel.app"; // Use HTTPS locally (ensure localhost runs on HTTPS)
 
 const App = () => {
   const [persons, setPersons] = useState([]);
