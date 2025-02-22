@@ -5,7 +5,7 @@ import NewPerson from "@/pages/NewPerson";
 import EditPerson from "@/pages/EditPerson";
 import ServicesList from "@/pages/ServicesList";
 import ProfilePage from "@/pages/ProfilePage";
-import AttendanceForm from "@/pages/AttendanceForm"; // Added AttendanceForm
+import AttendanceList from "@/pages/AttendanceList"; // Added AttendanceForm
 import Attendance from "@/pages/Attendance"; // Added AttendanceForm
 import LayoutPage from "@/pages/LayoutPage";
 
@@ -19,7 +19,7 @@ const AppRoutes = () => {
         <Route path="/profile/:id" element={<ProfilePage />} />
         <Route path="/edit-person/:id" element={<EditPerson />} />
         <Route path="/services" element={<ServicesList />} />
-        <Route path="/attendance-form" element={<AttendanceForm />} /> {/* Added route */}
+        <Route path="/attendance" element={<AttendanceList />} /> {/* Added route */}
         <Route path="/attendance/:serviceId" element={<Attendance />} /> {/* Added route */}
       </Route>
     </Routes>

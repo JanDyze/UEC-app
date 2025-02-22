@@ -13,7 +13,7 @@ import { useSidebar } from "@/context/SidebarContext"; // Import context
 
 const menuItems = [
     { icon: <ChurchIcon />, label: "Church", path: "/" },
-    { icon: <CalendarMonthIcon />, label: "Attendance", path: "/services" },
+    { icon: <CalendarMonthIcon />, label: "Attendance", path: "/attendance" },
     { icon: <Diversity3Icon />, label: "Members", path: "/persons" },
     { icon: <SettingsIcon />, label: "Settings", path: "/" },
 ];

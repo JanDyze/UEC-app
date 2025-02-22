@@ -11,6 +11,8 @@ import CheckIcon from "@mui/icons-material/Check"
 import SearchIcon from "@mui/icons-material/Search"
 import { useState } from "react";
 import PersonAddIcon from "@mui/icons-material/PersonAdd"
+import LockIcon from "@mui/icons-material/Lock"
+import LockOpenIcon from "@mui/icons-material/LockOpen"
 const AttendanceSheet = () => {
     const [attendance, setAttendance] = useState(false);
 
@@ -27,6 +29,13 @@ const AttendanceSheet = () => {
                                 </Typography>
 
                             </Stack>
+
+
+                        </Stack>
+
+                    </Box>
+                    <Card>
+                        <Sheet sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 2 }}>
                             <Stack direction="row" sx={{ justifyContent: "space-between", alignItems: "center", gap: 2 }}>
 
                                 <Stack direction="row" sx={{ alignItems: "center", gap: 1, flex: 1 }}>
@@ -57,16 +66,19 @@ const AttendanceSheet = () => {
                                     }}
                                     startDecorator={<PersonAddIcon />} // Adds an icon before the text
                                 >
-                                    Add attendee
+                                    Add
                                 </Button>
 
 
                             </Stack>
-
-                        </Stack>
-
-                    </Box>
-                    <Card>
+                            <Button
+                                variant="solid"
+                                color="neutral"
+                                startDecorator={<LockOpenIcon />}
+                            >
+                                Lock All
+                            </Button>
+                        </Sheet>
                         <Table aria-label="basic table">
                             <thead>
                                 <tr>
@@ -89,7 +101,10 @@ const AttendanceSheet = () => {
                                                 {person.firstname} {" "} {person.lastname}
                                             </Stack></td>
                                         <td>
-                                            <Stack direction="row" sx={{ justifyContent: "end", gap: 2 }}>
+                                            <Stack direction="row" sx={{ justifyContent: "end", gap: 2, alignItems: "center" }}>
+                                                {/* Lock Icon */}
+
+                                                {/* Toggle Switch */}
                                                 <IconSwitch
                                                     checkedBgColor="success.500"
                                                     uncheckedBgColor="secondary.main"
@@ -98,8 +113,10 @@ const AttendanceSheet = () => {
                                                     uncheckedIcon={<CloseIcon sx={{ color: "primary" }} />} // Sun color
                                                     checkedIcon={<CheckIcon sx={{ color: "success.500" }} />} // Moon color
                                                 />
+                                                <LockOpenIcon sx={{ color: "neutral.500", fontSize: 20, cursor: "pointer" }} />
                                             </Stack>
                                         </td>
+
                                     </tr>
                                 ))}
                             </tbody>

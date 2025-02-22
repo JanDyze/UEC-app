@@ -1,107 +1,89 @@
-import React, { useEffect, useState } from "react";
-import { Table, Sheet, Typography, Button, IconButton } from "@mui/joy";
-import { Link } from "react-router-dom";
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
+import { useEffect, useState } from "react";
+import { fetchAttendanceRecords, addAttendance } from "@/api/attendanceApi";
+import { fetchPersons } from "@/api/personsApi";
 
 const AttendanceList = () => {
     const [attendance, setAttendance] = useState([]);
     const [persons, setPersons] = useState([]);
-    const [services, setServices] = useState([]);
+    const [formData, setFormData] = useState({
+        date: "",
+        person_id: "",
+        status: "Present",
+    });
 
     useEffect(() => {
-        fetchAttendance();
-        fetchPersons();
-        fetchServices();
+        const loadData = async () => {
+            const attendanceData = await fetchAttendanceRecords();
+            const personsData = await fetchPersons();
+
+            setAttendance(attendanceData || []);
+            setPersons(personsData || []);
+        };
+        loadData();
     }, []);
 
-    const fetchAttendance = async () => {
-        try {
-            const res = await fetch("http://localhost:5000/api/attendance");
-            const data = await res.json();
-            setAttendance(data);
-        } catch (error) {
-            console.error("Error fetching attendance:", error);
-        }
+    const handleChange = (e) => {
+        setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
-    const fetchPersons = async () => {
-        try {
-            const res = await fetch("http://localhost:5000/api/persons");
-            const data = await res.json();
-            setPersons(data);
-        } catch (error) {
-            console.error("Error fetching persons:", error);
-        }
-    };
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        const { date, person_id, status } = formData;
 
-    const fetchServices = async () => {
-        try {
-            const res = await fetch("http://localhost:5000/api/services");
-            const data = await res.json();
-            setServices(data);
-        } catch (error) {
-            console.error("Error fetching services:", error);
+        const response = await addAttendance({ date, person_id, status });
+
+        if (response) {
+            setAttendance((prev) => [...prev, response]);
+            setFormData({ date: "", person_id: "", status: "Present" });
+        } else {
+            alert("Failed to add attendance.");
         }
     };
 
     return (
-        <Sheet variant="outlined" sx={{ p: 2, borderRadius: "md", width: "90vw", mx: "auto", mt: 4 }}>
-            <Typography level="h4" sx={{ mb: 2 }}>
-                Attendance List
-            </Typography>
+        <div>
+            <h2>Attendance Records</h2>
 
-            <Button component={Link} to="/new-attendance" sx={{ mb: 2 }}>
-                Add New Attendance
-            </Button>
+            <form onSubmit={handleSubmit}>
+                <input
+                    type="date"
+                    name="date"
+                    value={formData.date}
+                    onChange={handleChange}
+                    required
+                />
 
-            <Table borderAxis="both" sx={{ width: "100%", overflow: "auto" }}>
-                <thead>
-                    <tr>
-                        <th>Service Date</th>
-                        <th>Person</th>
-                        <th>Status</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {attendance.length > 0 ? (
-                        attendance.map((record) => {
-                            const service = services.find((s) => s.id === record.service_id);
-                            const person = persons.find((p) => p.id === record.person_id);
+                <select name="person_id" value={formData.person_id} onChange={handleChange} required>
+                    <option value="">Select Person</option>
+                    {persons.map((person) => (
+                        <option key={person._id} value={person._id}>
+                            {person.firstname} {person.lastname}
+                        </option>
+                    ))}
+                </select>
 
-                            return (
-                                <tr key={record.id}>
-                                    <td>
-                                        {service
-                                            ? new Date(service.date).toLocaleDateString("en-US", {
-                                                year: "numeric",
-                                                month: "long",
-                                                day: "numeric",
-                                            })
-                                            : "Unknown"}
-                                    </td>
-                                    <td>{person ? `${person.firstname} ${person.lastname}` : "Unknown"}</td>
-                                    <td>{record.status}</td>
-                                    <td>
-                                        <IconButton component={Link} to={`/edit-attendance/${record.id}`} size="sm">
-                                            <EditIcon />
-                                        </IconButton>
-                                        <IconButton onClick={() => handleDelete(record.id)} size="sm" color="danger">
-                                            <DeleteIcon />
-                                        </IconButton>
-                                    </td>
-                                </tr>
-                            );
-                        })
-                    ) : (
-                        <tr>
-                            <td colSpan="4">No attendance records found.</td>
-                        </tr>
-                    )}
-                </tbody>
-            </Table>
-        </Sheet>
+                <select name="status" value={formData.status} onChange={handleChange}>
+                    <option value="Present">Present</option>
+                    <option value="Absent">Absent</option>
+                </select>
+
+                <button type="submit" disabled={!formData.date || !formData.person_id}>
+                    Add Attendance
+                </button>
+            </form>
+
+            {attendance.length === 0 ? (
+                <p>No attendance records found.</p>
+            ) : (
+                attendance.map((record) => (
+                    <div key={record._id}>
+                        {new Date(record.date).toISOString().split("T")[0]} -{" "}
+                        {record.person_id?.firstname} {record.person_id?.lastname} -{" "}
+                        {record.status}
+                    </div>
+                ))
+            )}
+        </div>
     );
 };
 
