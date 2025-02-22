@@ -1,8 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { io } from "socket.io-client";
 
-const socket = io("https://uec-api-33mk.vercel.app");
+const API_BASE_URL = "https://uec-api-33mk.vercel.app"; // Change this to your Vercel API
 
 const App = () => {
   const [persons, setPersons] = useState([]);
@@ -11,14 +10,20 @@ const App = () => {
 
   // Fetch persons from backend
   const fetchPersons = async () => {
-    const res = await axios.get("https://uec-api-33mk.vercel.app/persons");
+    const res = await axios.get(`${API_BASE_URL}/persons`);
     setPersons(res.data);
   };
 
   useEffect(() => {
-    fetchPersons();
-    socket.on("update", fetchPersons);
-    return () => socket.off("update");
+    fetchPersons(); // Initial fetch
+
+    // Listen for MongoDB Change Events via SSE
+    const eventSource = new EventSource(`${API_BASE_URL}/events`);
+    eventSource.onmessage = () => {
+      fetchPersons(); // Update UI when a new person is added
+    };
+
+    return () => eventSource.close(); // Cleanup on unmount
   }, []);
 
   // Handle form submission
@@ -26,7 +31,7 @@ const App = () => {
     e.preventDefault();
     if (!firstname || !lastname) return;
 
-    await axios.post("https://uec-api-33mk.vercel.app/persons", { firstname, lastname });
+    await axios.post(`${API_BASE_URL}/persons`, { firstname, lastname });
 
     setFirstname("");
     setLastname("");
@@ -36,7 +41,6 @@ const App = () => {
     <div style={{ padding: "20px", maxWidth: "400px", margin: "auto" }}>
       <h2>Person List</h2>
 
-      {/* Form */}
       <form onSubmit={handleSubmit}>
         <input
           type="text"
@@ -55,10 +59,11 @@ const App = () => {
         <button type="submit">Add</button>
       </form>
 
-      {/* Person List */}
       <ul>
         {persons.map((p) => (
-          <li key={p._id}>{p.firstname} {p.lastname}</li>
+          <li key={p._id}>
+            {p.firstname} {p.lastname}
+          </li>
         ))}
       </ul>
     </div>
