@@ -43,40 +43,68 @@ const NewPerson = () => {
             <Typography level="h3" sx={{ mb: 2, color: "primary.main" }}>Add New Person</Typography>
             {error && <Typography sx={{ color: "danger.main" }}>{error}</Typography>}
             <Stack spacing={2} component="form" onSubmit={handleSubmit} sx={{ color: "primary.main" }}>
-                {["firstname", "lastname", "address", "nickname", "phone", "facebook"].map((field) => (
-                    <Input
-                        key={field}
-                        name={field}
-                        placeholder={field.replace(/^\w/, (c) => c.toUpperCase())} // Capitalizes first letter
-                        value={formData[field]}
-                        onChange={handleChange}
-                        required={["firstname", "lastname", "address", "phone"].includes(field)}
-                        sx={{
-                            "&::placeholder": { color: "primary.500" }, // Placeholder color
-                            "&:focus-within": { color: "primary.main" }, // Focus color
-                        }}
-                    />
-                ))}
+                <Input
+                    name="firstname"
+                    placeholder="First Name"
+                    value={formData.firstname}
+                    onChange={handleChange}
+                    required
+                    sx={{ "&::placeholder": { color: "primary.500" }, "&:focus-within": { color: "primary.main" } }}
+                />
+                <Input
+                    name="lastname"
+                    placeholder="Last Name"
+                    value={formData.lastname}
+                    onChange={handleChange}
+                    required
+                    sx={{ "&::placeholder": { color: "primary.500" }, "&:focus-within": { color: "primary.main" } }}
+                />
+                <Input
+                    name="address"
+                    placeholder="Address"
+                    value={formData.address}
+                    onChange={handleChange}
+                    required
+                    sx={{ "&::placeholder": { color: "primary.500" }, "&:focus-within": { color: "primary.main" } }}
+                />
                 <Input
                     type="date"
                     name="birthday"
                     value={formData.birthday}
                     onChange={handleChange}
-                    required
-                    sx={{
-                        "&:focus-within": { color: "primary.main" },
-                    }}
+                    sx={{ "&:focus-within": { color: "primary.main" } }}
                 />
                 <Select
                     name="gender"
                     value={formData.gender}
                     onChange={(e, newValue) => setFormData({ ...formData, gender: newValue })}
-                    required
                     sx={{ color: "primary.main" }}
                 >
                     <Option value="Male">Male</Option>
                     <Option value="Female">Female</Option>
                 </Select>
+                <Input
+                    name="nickname"
+                    placeholder="Nickname"
+                    value={formData.nickname}
+                    onChange={handleChange}
+                    sx={{ "&::placeholder": { color: "primary.500" }, "&:focus-within": { color: "primary.main" } }}
+                />
+                <Input
+                    name="phone"
+                    placeholder="Phone Number"
+                    value={formData.phone}
+                    onChange={handleChange}
+                    required
+                    sx={{ "&::placeholder": { color: "primary.500" }, "&:focus-within": { color: "primary.main" } }}
+                />
+                <Input
+                    name="facebook"
+                    placeholder="Facebook Profile Link"
+                    value={formData.facebook}
+                    onChange={handleChange}
+                    sx={{ "&::placeholder": { color: "primary.500" }, "&:focus-within": { color: "primary.main" } }}
+                />
                 <Button type="submit" sx={{ bgcolor: "primary.main", color: "white" }}>Submit</Button>
             </Stack>
         </Sheet>
