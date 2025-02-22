@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Table, Sheet, Typography, Button, IconButton } from "@mui/joy";
+import { Table, Typography, Button, IconButton } from "@mui/joy";
 import { Link } from "react-router-dom";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -65,20 +65,8 @@ const ServicesList = () => {
     };
 
     return (
-        <Sheet
-            variant="outlined"
-            sx={{
-                p: 2,
-                borderRadius: "md",
-                width: "100vw",
-                height: "100vh",
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                justifyContent: "center",
-            }}
-        >
-            <Typography level="h4" sx={{ mb: 2 }}>
+        <div style={{ padding: "20px", display: "flex", flexDirection: "column", alignItems: "center" }}>
+            <Typography sx={{ fontSize: "1.5rem", fontWeight: "bold", mb: 2 }}>
                 Services List
             </Typography>
 
@@ -122,7 +110,7 @@ const ServicesList = () => {
                     )}
                 </tbody>
             </Table>
-        </Sheet>
+        </div>
     );
 };
 

@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import VisibilityIcon from "@mui/icons-material/Visibility"; // View Icon
+import IconSwitch from "@/components/IconSwitch"
 
 const PersonsList = () => {
     const [persons, setPersons] = useState([]);
@@ -43,69 +44,69 @@ const PersonsList = () => {
     };
 
     return (
-        <Sheet
-            variant="outlined"
-            sx={{
-                p: 2,
-                borderRadius: "md",
-                width: "100vw",
-                height: "100vh",
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                justifyContent: "center",
-            }}
-        >
-            <Typography level="h4" sx={{ mb: 2 }}>
-                Persons List
-            </Typography>
+        <>
+            <Sheet
+                sx={{
+                    p: 2,
+                    borderRadius: "md",
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    justifyContent: "center",
+                }}
+            >
+                <Typography level="h4" sx={{ mb: 2 }}>
+                    Persons List
+                </Typography>
+                <IconSwitch />
 
-            <Button component={Link} to="/new-person" sx={{ mb: 2 }}>
-                Add New Person
-            </Button>
+                <Button component={Link} to="/new-person" sx={{ mb: 2 }}>
+                    Add New Person
+                </Button>
 
-            <Table borderAxis="both" sx={{ width: "90%", maxHeight: "70vh", overflow: "auto" }}>
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Phone</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {persons.length > 0 ? (
-                        persons.map((person) => (
-                            <tr key={person.id}>
-                                <td>
-                                    {person.firstname} {person.lastname}
-                                </td>
-                                <td>{person.phone || "N/A"}</td>
-                                <td>
-                                    {/* View Button */}
-                                    <IconButton component={Link} to={`/profile/${person.id}`} size="sm">
-                                        <VisibilityIcon />
-                                    </IconButton>
-
-                                    {/* Edit Button */}
-                                    <IconButton component={Link} to={`/edit-person/${person.id}`} size="sm">
-                                        <EditIcon />
-                                    </IconButton>
-
-                                    {/* Delete Button */}
-                                    <IconButton onClick={() => handleDelete(person.id)} size="sm" color="danger">
-                                        <DeleteIcon />
-                                    </IconButton>
-                                </td>
-                            </tr>
-                        ))
-                    ) : (
+                <Table borderAxis="both" sx={{ width: "90%", maxHeight: "70vh", overflow: "auto" }}>
+                    <thead>
                         <tr>
-                            <td colSpan="3">No persons found.</td>
+                            <th>Name</th>
+                            <th>Phone</th>
+                            <th>Actions</th>
                         </tr>
-                    )}
-                </tbody>
-            </Table>
-        </Sheet>
+                    </thead>
+                    <tbody>
+                        {persons.length > 0 ? (
+                            persons.map((person) => (
+                                <tr key={person.id}>
+                                    <td>
+                                        {person.firstname} {person.lastname}
+                                    </td>
+                                    <td>{person.phone || "N/A"}</td>
+                                    <td>
+                                        {/* View Button */}
+                                        <IconButton component={Link} to={`/profile/${person.id}`} size="sm">
+                                            <VisibilityIcon />
+                                        </IconButton>
+
+                                        {/* Edit Button */}
+                                        <IconButton component={Link} to={`/edit-person/${person.id}`} size="sm">
+                                            <EditIcon />
+                                        </IconButton>
+
+                                        {/* Delete Button */}
+                                        <IconButton onClick={() => handleDelete(person.id)} size="sm" color="danger">
+                                            <DeleteIcon />
+                                        </IconButton>
+                                    </td>
+                                </tr>
+                            ))
+                        ) : (
+                            <tr>
+                                <td colSpan="3">No persons found.</td>
+                            </tr>
+                        )}
+                    </tbody>
+                </Table>
+            </Sheet>
+        </>
     );
 };
 
