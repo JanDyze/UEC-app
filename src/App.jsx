@@ -1,29 +1,57 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import axios from "axios";
 
-const API_BASE_URL = "https://uec-api-33mk.vercel.app"; // Change this to your Vercel API
+const API_BASE_URL =
+  process.env.NODE_ENV === "production"
+    ? "https://uec-api-33mk.vercel.app"
+    : "http://localhost:5000"; // Use local API in development
 
 const App = () => {
   const [persons, setPersons] = useState([]);
   const [firstname, setFirstname] = useState("");
   const [lastname, setLastname] = useState("");
+  const eventSourceRef = useRef(null);
 
   // Fetch persons from backend
   const fetchPersons = async () => {
-    const res = await axios.get(`${API_BASE_URL}/persons`);
-    setPersons(res.data);
+    try {
+      const res = await axios.get(`${API_BASE_URL}/persons`);
+      setPersons(res.data);
+    } catch (error) {
+      console.error("Error fetching persons:", error);
+    }
   };
 
   useEffect(() => {
     fetchPersons(); // Initial fetch
 
-    // Listen for MongoDB Change Events via SSE
-    const eventSource = new EventSource(`${API_BASE_URL}/events`);
-    eventSource.onmessage = () => {
-      fetchPersons(); // Update UI when a new person is added
+    // Setup SSE for real-time updates
+    const setupSSE = () => {
+      if (eventSourceRef.current) {
+        eventSourceRef.current.close(); // Close any existing connection
+      }
+
+      eventSourceRef.current = new EventSource(`${API_BASE_URL}/events`);
+
+      eventSourceRef.current.onmessage = () => {
+        console.log("Update received from server");
+        fetchPersons(); // Refresh list on update
+      };
+
+      eventSourceRef.current.onerror = () => {
+        console.error("SSE connection lost. Retrying in 5s...");
+        eventSourceRef.current.close();
+        setTimeout(setupSSE, 5000); // Retry after 5 seconds
+      };
     };
 
-    return () => eventSource.close(); // Cleanup on unmount
+    setupSSE();
+
+    return () => {
+      if (eventSourceRef.current) {
+        eventSourceRef.current.close();
+      }
+    };
   }, []);
 
   // Handle form submission
@@ -31,10 +59,13 @@ const App = () => {
     e.preventDefault();
     if (!firstname || !lastname) return;
 
-    await axios.post(`${API_BASE_URL}/persons`, { firstname, lastname });
-
-    setFirstname("");
-    setLastname("");
+    try {
+      await axios.post(`${API_BASE_URL}/persons`, { firstname, lastname });
+      setFirstname("");
+      setLastname("");
+    } catch (error) {
+      console.error("Error adding person:", error);
+    }
   };
 
   return (
