@@ -57,7 +57,7 @@ const ServicesList = () => {
             <Table borderAxis="both" sx={{ width: "90%", maxHeight: "70vh", overflow: "auto" }}>
                 <thead>
                     <tr>
-                        <th>ID</th>
+                        {/* <th>ID</th> */}
                         <th>Date</th>
                         <th>Type of Event</th>
                         <th>Actions</th>
@@ -67,7 +67,7 @@ const ServicesList = () => {
                     {services.length > 0 ? (
                         services.map((service) => (
                             <tr key={service._id}>
-                                <td>{service._id}</td>
+                                {/* <td>{service._id}</td> */}
                                 <td>{new Date(service.date).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })}</td>
                                 <td>{service.type_of_event}</td>
                                 <td>
