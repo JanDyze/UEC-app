@@ -1,29 +1,46 @@
 import React from "react";
-import { Stack, Typography, Box, Card, Grid, } from "@mui/joy";
+import { Grid, Card } from "@mui/joy";
 import CalendarComponent from "@/components/Calendar";
 import AttendanceTable from "@/components/AttendanceTable";
 
 const AttendanceSheet = () => {
-
-
     return (
-        <>
-            <Grid container spacing={2} columns={16} sx={{ flexGrow: 1, width: "100%", }}>
-                <Grid xs={16} lg={11} sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-                    <Card>
-                        <AttendanceTable />
-                    </Card>
-                </Grid>
-                <Grid xs={16} lg={5} sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-                    <Card>
-                        <CalendarComponent />
-                    </Card>
-                    <Card>
-                        Sample
-                    </Card>
-                </Grid>
-            </Grid >
-        </>
+        <Grid container spacing={2} columns={16} sx={{ width: "auto" }}>
+            {/* Attendance Table - Moves below Calendar on small screens */}
+            <Grid
+                xs={16}
+                lg={11}
+                sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: 2,
+                    order: { xs: 2, lg: 1 }, // Moves below on small screens
+                }}
+            >
+                <Card>
+                    <AttendanceTable />
+                </Card>
+            </Grid>
+
+            {/* Calendar & Sample - Moves above AttendanceTable on small screens */}
+            <Grid
+                xs={16}
+                lg={5}
+                sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: 2,
+                    order: { xs: 1, lg: 2 }, // Moves above on small screens
+                }}
+            >
+                <Card>
+                    <CalendarComponent />
+                </Card>
+                <Card>
+                    Sample
+                </Card>
+            </Grid>
+        </Grid>
     );
 };
 

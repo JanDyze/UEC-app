@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Table, Sheet, Typography, Button, IconButton } from "@mui/joy";
+import { Table, Sheet, Typography, Button, IconButton, Grid } from "@mui/joy";
 import { Link } from "react-router-dom";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -36,67 +36,70 @@ const PersonsList = () => {
     };
 
     return (
-        <Sheet
-            sx={{
-                p: 2,
-                borderRadius: "md",
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                justifyContent: "center",
-            }}
-        >
-            <Typography level="h4" sx={{ mb: 2 }}>
-                Persons List
-            </Typography>
+        <Grid container spacing={2} columns={16} sx={{ width: "auto", }}>
 
-            <Button component={Link} to="/new-person" sx={{ mb: 2 }}>
-                Add New Person
-            </Button>
+            <Sheet
+                sx={{
+                    p: 2,
+                    borderRadius: "md",
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    justifyContent: "center",
+                }}
+            >
+                <Typography level="h4" sx={{ mb: 2 }}>
+                    Persons List
+                </Typography>
 
-            <Table borderAxis="both" sx={{ width: "90%", maxHeight: "70vh", overflow: "auto" }}>
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Phone</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {loading ? (
+                <Button component={Link} to="/new-person" sx={{ mb: 2 }}>
+                    Add New Person
+                </Button>
+
+                <Table borderAxis="both" sx={{ width: "90%", maxHeight: "70vh", overflow: "auto" }}>
+                    <thead>
                         <tr>
-                            <td colSpan="3">Loading persons...</td>
+                            <th>Name</th>
+                            <th>Phone</th>
+                            <th>Actions</th>
                         </tr>
-                    ) : persons.length > 0 ? (
-                        persons.map((person) => (
-                            <tr key={person._id}>
-                                <td>
-                                    {person.firstname} {person.lastname}
-                                </td>
-                                <td>{person.phone || "N/A"}</td>
-                                <td>
-                                    <IconButton component={Link} to={`/profile/${person._id}`} size="sm">
-                                        <VisibilityIcon />
-                                    </IconButton>
-
-                                    <IconButton component={Link} to={`/edit-person/${person._id}`} size="sm">
-                                        <EditIcon />
-                                    </IconButton>
-
-                                    <IconButton onClick={() => handleDelete(person._id)} size="sm" color="danger">
-                                        <DeleteIcon />
-                                    </IconButton>
-                                </td>
+                    </thead>
+                    <tbody>
+                        {loading ? (
+                            <tr>
+                                <td colSpan="3">Loading persons...</td>
                             </tr>
-                        ))
-                    ) : (
-                        <tr>
-                            <td colSpan="3">No persons found.</td>
-                        </tr>
-                    )}
-                </tbody>
-            </Table>
-        </Sheet>
+                        ) : persons.length > 0 ? (
+                            persons.map((person) => (
+                                <tr key={person._id}>
+                                    <td>
+                                        {person.firstname} {person.lastname}
+                                    </td>
+                                    <td>{person.phone || "N/A"}</td>
+                                    <td>
+                                        <IconButton component={Link} to={`/profile/${person._id}`} size="sm">
+                                            <VisibilityIcon />
+                                        </IconButton>
+
+                                        <IconButton component={Link} to={`/edit-person/${person._id}`} size="sm">
+                                            <EditIcon />
+                                        </IconButton>
+
+                                        <IconButton onClick={() => handleDelete(person._id)} size="sm" color="danger">
+                                            <DeleteIcon />
+                                        </IconButton>
+                                    </td>
+                                </tr>
+                            ))
+                        ) : (
+                            <tr>
+                                <td colSpan="3">No persons found.</td>
+                            </tr>
+                        )}
+                    </tbody>
+                </Table>
+            </Sheet>
+        </Grid>
     );
 };
 
